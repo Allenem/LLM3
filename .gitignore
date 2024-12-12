@@ -3,3 +3,4 @@ __pycache__/
 *.pyc
 ckpt
 dataset
+*/llama2/Llama-2-7b-hf/
