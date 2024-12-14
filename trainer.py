@@ -304,7 +304,7 @@ def run_training(
         with open(log_name, "a") as log_file:
             now = time.strftime("%c")
             # log_file.write('\n\n%s\nepoch, loss, mean, ptv, ctv, gtv, organs\n'% now)
-            log_file.write('\n\nBegin at %s\n\nepoch, train_loss, val_loss, val_avg_mse =======================================\n'% now)
+            log_file.write('\n\nBegin at %s\n\nepoch, train_loss, val_loss =======================================\n'% now)
 
     scaler = None
     if args.amp:
@@ -331,7 +331,11 @@ def run_training(
             pbar.set_postfix(loss=train_loss)
 
             if args.rank == 0 and writer is not None:
-                writer.add_scalar("train_loss", train_loss, epoch)
+                # writer.add_scalar("train_loss", train_loss, epoch)
+                writer.add_scalar("Loss/train_loss", train_loss, epoch)
+                # record learning rate
+                for i, param_group in enumerate(optimizer.param_groups):
+                    writer.add_scalar("Learning_rate/lr_%d"%i, param_group["lr"], epoch)
             
             message1 = '%d, %.6f'%(epoch, train_loss)
 
@@ -376,7 +380,8 @@ def run_training(
             # add
             print("Validation loss: %.6f, mean MSE: %.6f"%(val_loss, np.mean(val_mse)))
             val_avg_mse = np.mean(val_mse)
-            message2 = '%d, %.6f ---- '%(val_loss, val_avg_mse) + ', '.join(['%.3f'%msei for msei in val_mse])
+            # message2 = '%.6d, %.6f ---- '%(val_loss, val_avg_mse) + ', '.join(['%.3f'%msei for msei in val_mse])
+            message2 = '%.6d ---- '%val_loss + ', '.join(['%.3f'%msei for msei in val_mse])
 
             if args.logdir is not None and args.rank == 0:
                 with open(log_name, "a") as log_file:
@@ -387,7 +392,11 @@ def run_training(
                 
                 if writer is not None:
                     # writer.add_scalar("val_acc", val_avg_acc, epoch)
-                    writer.add_scalar("val_mse", val_avg_mse, epoch)
+                    writer.add_scalar("Loss/val_loss", val_avg_mse, epoch)
+                    writer.add_scalars("Loss/train-val", {
+                        'Train': float(train_loss),  # 确保为浮点数
+                        'Validation': float(val_avg_mse)
+                    }, epoch)
                 
                 # # CHANGED
                 # if (epoch > 0) & (val_avg_acc > val_acc_max):
@@ -421,6 +430,9 @@ def run_training(
     # CHANGED
     # print("Training Finished !, Best Accuracy: ", val_acc_max)
     print("Training Finished !, Best MSE: ", val_mse_min)
+
+    if writer is not None:
+        writer.close()
     
     if args.logdir is not None and args.rank == 0:
         with open(log_name, "a") as log_file:

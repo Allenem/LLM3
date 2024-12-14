@@ -306,5 +306,5 @@ if __name__ == "__main__":
 
     main(args)
 
-# python main.py --logdir ./ckpt/multimodal --save_checkpoint True --max_epochs 10
+# python main.py --logdir ./ckpt/multimodal --save_checkpoint True --max_epochs 100
 # python main.py --pretrained_dir ./ckpt/multimodal --context True --n_prompts 2 --context_length 8 --test_mode 2 --batch_size 1 --save_interval 10
