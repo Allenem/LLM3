@@ -122,7 +122,7 @@ class ContextUNETR(nn.Module):
             out_channels = 4 * feature_size,
             kernel_size = 3, stride=2, norm_name=norm_name, res_block=True)
 
-        self.encoder10 = UnetrBasicBlock(spatial_dims=spatial_dims,
+        self.encoder5 = UnetrBasicBlock(spatial_dims=spatial_dims,
             in_channels = 4 * feature_size,
             out_channels = 8 * feature_size,
             kernel_size = 3, stride=2, norm_name=norm_name, res_block=True)
@@ -158,7 +158,7 @@ class ContextUNETR(nn.Module):
             out_channels=out_channels, 
             kernel_size=3, upsample_kernel_size=2, norm_name=norm_name, res_block=True)
             
-        feature_size_list = [self.encoder1.layer.conv3.out_channels, self.encoder2.layer.conv3.out_channels, self.encoder3.layer.conv3.out_channels, self.encoder4.layer.conv3.out_channels, self.encoder10.layer.conv3.out_channels]
+        feature_size_list = [self.encoder1.layer.conv3.out_channels, self.encoder2.layer.conv3.out_channels, self.encoder3.layer.conv3.out_channels, self.encoder4.layer.conv3.out_channels, self.encoder5.layer.conv3.out_channels]
 
         # multiomdal text encoder
         if self.context:
@@ -261,7 +261,7 @@ class ContextUNETR(nn.Module):
         enc1 = self.encoder2(enc0)
         enc2 = self.encoder3(enc1)
         enc3 = self.encoder4(enc2)
-        dec4 = self.encoder10(enc3)
+        dec4 = self.encoder5(enc3)
     
         hidden_states_out.append(enc0)
         hidden_states_out.append(enc1)
@@ -270,7 +270,8 @@ class ContextUNETR(nn.Module):
         hidden_states_out.append(dec4)
 
         # multimodal alignment
-        hidden_states_out, _, _ = self.interactive_alignment(hidden_states_out, report_in, x_in)
+        if self.context:
+            hidden_states_out, _, _ = self.interactive_alignment(hidden_states_out, report_in, x_in)
 
         # visual decoder
         dec2 = self.decoder4(hidden_states_out[4], hidden_states_out[3])

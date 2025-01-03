@@ -231,7 +231,7 @@ def get_loader(args, retriever=None):
             transforms.CropForegroundd(keys=["image", "label"], source_key="image", allow_smaller=True),
             transforms.SpatialPadd(keys=["image", "label"], spatial_size=(args.roi_x, args.roi_y, args.roi_z)),
             # transforms.Resized(keys=["image", "label"], spatial_size=(args.roi_x, args.roi_y, args.roi_z)),
-            transforms.Rotate90d(keys=["image", "label"]),
+            # transforms.Rotate90d(keys=["image", "label"]),
             # CHANGED
             # transforms.RandCropByPosNegLabeld(
             #     keys=["image", "label"],
@@ -277,7 +277,7 @@ def get_loader(args, retriever=None):
             transforms.CropForegroundd(keys=["image", "label"], source_key="image", allow_smaller=True),
             transforms.SpatialPadd(keys=["image", "label"], spatial_size=(args.roi_x, args.roi_y, args.roi_z)),
             # transforms.Resized(keys=["image", "label"], spatial_size=(args.roi_x, args.roi_y, args.roi_z)),
-            transforms.Rotate90d(keys=["image", "label"]),
+            # transforms.Rotate90d(keys=["image", "label"]),
             # transforms.SpatialPadd(keys=["image", "label"], spatial_size=(args.roi_x, args.roi_y, args.roi_z)),
             transforms.ToTensord(keys=["image", "label"]),
         ]
@@ -303,7 +303,7 @@ def get_loader(args, retriever=None):
             transforms.CropForegroundd(keys=["image", "label"], source_key="image", allow_smaller=True),
             transforms.SpatialPadd(keys=["image", "label"], spatial_size=(args.roi_x, args.roi_y, args.roi_z)),
             # transforms.Resized(keys=["image", "label"], spatial_size=(args.roi_x, args.roi_y, args.roi_z)),
-            transforms.Rotate90d(keys=["image", "label"]),
+            # transforms.Rotate90d(keys=["image", "label"]),
             # transforms.SpatialPadd(keys=["image", "label"], spatial_size=(args.roi_x, args.roi_y, args.roi_z)),
             transforms.ToTensord(keys=["image", "label"]),
         ]

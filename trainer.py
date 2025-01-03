@@ -380,8 +380,8 @@ def run_training(
             # add
             print("Validation loss: %.6f, mean MSE: %.6f"%(val_loss, np.mean(val_mse)))
             val_avg_mse = np.mean(val_mse)
-            # message2 = '%.6d, %.6f ---- '%(val_loss, val_avg_mse) + ', '.join(['%.3f'%msei for msei in val_mse])
-            message2 = '%.6d ---- '%val_loss + ', '.join(['%.3f'%msei for msei in val_mse])
+            # message2 = '%.6f, %.6f ---- '%(val_loss, val_avg_mse) + ', '.join(['%.3f'%msei for msei in val_mse])
+            message2 = '%.6f ---- '%val_loss + ', '.join(['%.3f'%msei for msei in val_mse])
 
             if args.logdir is not None and args.rank == 0:
                 with open(log_name, "a") as log_file:
